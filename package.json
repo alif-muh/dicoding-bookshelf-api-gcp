@@ -1,0 +1,19 @@
+{
+  "name": "bookshelf-api-gcp",
+  "version": "1.0.0",
+  "description": "final project submission for Dicoding: Belajar Membuat Aplikasi Back-End untuk Pemula dengan Google Cloud",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alif-muh/dicoding-bookshelf-api-gcp.git"
+  },
+  "author": "alif-muh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alif-muh/dicoding-bookshelf-api-gcp/issues"
+  },
+  "homepage": "https://github.com/alif-muh/dicoding-bookshelf-api-gcp#readme"
+}
