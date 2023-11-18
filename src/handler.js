@@ -17,7 +17,7 @@ const addBookHandler = (request, h) => {
   }
 
   // fail if readPage > readCount
-  if (readPage > readCout) {
+  if (readPage > pageCount) {
     const response = h.response({
       status: 'fail',
       message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
@@ -26,7 +26,6 @@ const addBookHandler = (request, h) => {
     return response;
   }
 
-  // add book
   const id = nanoid(16);
   const insertedAt = new Date().toISOString();
   const updatedAt = insertedAt;
@@ -56,19 +55,19 @@ const addBookHandler = (request, h) => {
     const response = h.response({
       status: 'success',
       message: 'Buku berhasil ditambahkan',
+      data: {
+        bookId: id,
+      },
     });
-
     response.code(201);
-
     return response;
   }
-
   const response = h.response({
     status: 'fail',
     message: 'Buku gagal ditambahkan',
   });
-
   response.code(500);
+
   return response;
 };
 
@@ -76,7 +75,7 @@ const addBookHandler = (request, h) => {
 const getAllBooksHandler = (request, h) => {
   const {name, reading, finished} = request.query; // get query parameters from HTTP req
 
-  let filteredBooks = books; // initial books
+  let filteredBooks = books;
 
   // name query
   if (name) {
@@ -97,23 +96,21 @@ const getAllBooksHandler = (request, h) => {
   const response = h.response({
     status: 'success',
     data: {
-      book: filteredBooks.map((book) => ({
+      books: filteredBooks.map((book) => ({
         id: book.id,
         name: book.name,
         publisher: book.publisher,
       })),
     },
   });
-
   response.code(200);
-
   return response;
 };
 
 // 5th criteria: API can display a book details
-const getBookByIdHandler = (request, h) => {
-  const {id} = request.params;
-  const book = book.filter((book) => book.id == id)[0];
+const getBookByIdHandler = (requset, h) => {
+  const {id} = requset.params;
+  const book = books.filter((book) => book.id === id)[0];
 
   // if the book found
   if (book) {
@@ -137,9 +134,9 @@ const getBookByIdHandler = (request, h) => {
 };
 
 // 6th criteria: API can edit a book data
-const editBookByIdHandler = (reqeust, h) => {
-  const {id} = reqeust.params;
-  const {name, year, author, summary, publisher, pageCount, readPage, reading} = reqeust.payload;
+const editBookByIdHandler = (request, h) => {
+  const {id} = request.params;
+  const {name, year, author, summary, publisher, pageCount, readPage, reading} = request.payload;
 
   const index = books.findIndex((book) => book.id === id);
 
@@ -150,11 +147,11 @@ const editBookByIdHandler = (reqeust, h) => {
         status: 'fail',
         message: 'Gagal memperbarui buku. Mohon isi nama buku',
       });
-      response.code(404);
+      response.code(400);
       return response;
     }
 
-    // if readPage > readCount
+    // if readPage > pageCount
     if (readPage > pageCount) {
       const response = h.response({
         status: 'fail',
@@ -166,6 +163,7 @@ const editBookByIdHandler = (reqeust, h) => {
 
     const finished = pageCount === readPage;
     const updatedAt = new Date().toISOString();
+
     books[index] = {
       ...books[index],
       name,
@@ -185,7 +183,7 @@ const editBookByIdHandler = (reqeust, h) => {
       status: 'success',
       message: 'Buku berhasil diperbarui',
     });
-    response.code(404);
+    response.code(200);
     return response;
   }
 
@@ -206,7 +204,7 @@ const deleteBookByIdHandler = (request, h) => {
 
   // if success
   if (index > -1) {
-    book.splice(index, 1);
+    books.splice(index, 1);
 
     const response = h.response({
       status: 'success',
@@ -225,4 +223,10 @@ const deleteBookByIdHandler = (request, h) => {
   return response;
 };
 
-module.exports = {addBookHandler, getAllBooksHandler, getBookByIdHandler, editBookByIdHandler, deleteBookByIdHandler};
+module.exports = {
+  addBookHandler,
+  getAllBooksHandler,
+  getBookByIdHandler,
+  editBookByIdHandler,
+  deleteBookByIdHandler,
+};

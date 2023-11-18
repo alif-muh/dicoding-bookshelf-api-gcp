@@ -32,7 +32,7 @@ const routes = [
   // DELETE book by id
   {
     method: 'DELETE',
-    path: '/boooks/{id}',
+    path: '/books/{id}',
     handler: deleteBookByIdHandler,
   },
 ];
